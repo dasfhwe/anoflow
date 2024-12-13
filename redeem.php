@@ -1,12 +1,34 @@
 <?php
-// Example: Activate subscription based on a code
-$username = $_GET['username'];
-$code = $_GET['code'];
+header('Content-Type: application/json');
 
-// Dummy activation (replace with real database or subscription check)
+// Пример базы данных кодов
+$codes = [
+    "ABC123" => 30,
+    "DEF456" => 60,
+    "GHI789" => 90
+];
+
+$code = $_GET['code'] ?? null;
+$username = $_GET['username'] ?? null;
+
 if ($code && $username) {
-    echo json_encode(['success' => true, 'duration' => 30]);
+    if (isset($codes[$code])) {
+        $duration = $codes[$code];
+        echo json_encode([
+            "success" => true,
+            "message" => "Code redeemed successfully",
+            "duration" => "$duration days"
+        ]);
+    } else {
+        echo json_encode([
+            "success" => false,
+            "message" => "Invalid code"
+        ]);
+    }
 } else {
-    echo json_encode(['success' => false, 'message' => 'Invalid subscription key']);
+    echo json_encode([
+        "success" => false,
+        "message" => "Missing parameters"
+    ]);
 }
 ?>
